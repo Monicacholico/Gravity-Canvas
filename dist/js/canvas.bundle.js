@@ -129,7 +129,7 @@ addEventListener('resize', function () {
 });
 
 // Objects
-function Object(x, y, radius, color) {
+function Ball(x, y, radius, color) {
     this.x = x;
     this.y = y;
     this.radius = radius;

@@ -115,6 +115,9 @@ var mouse = {
 
 var colors = ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66'];
 
+var gravity = 1;
+var friction = 0.99;
+
 // Event Listeners
 addEventListener('mousemove', function (event) {
     mouse.x = event.clientX;
@@ -128,42 +131,69 @@ addEventListener('resize', function () {
     init();
 });
 
-// Objects
-function Ball(x, y, radius, color) {
-    this.x = x;
-    this.y = y;
-    this.radius = radius;
-    this.color = color;
+//Utility functions
+function randomIntFromRange(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-Object.prototype.draw = function () {
-    c.beginPath();
-    c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-    c.fillStyle = this.color;
-    c.fill();
-    c.closePath();
-};
+function randomColor(colors) {
+    return colors[Math.floor(Math.random() * colors.length)];
+}
 
-Object.prototype.update = function () {
-    this.draw();
-};
+// Objects
+function Ball(x, y, dy, radius, color) {
+    this.x = x;
+    this.y = y;
+    this.dy = dy;
+    this.radius = radius;
+    this.color = color;
+
+    this.update = function () {
+        if (this.y + this.radius + this.dy > canvas.height) {
+            this.dy = -this.dy * friction;
+        } else {
+            this.dy += gravity;
+        }
+        this.y += this.dy;
+        this.draw();
+    };
+
+    this.draw = function () {
+        c.beginPath();
+        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+        c.fillStyle = this.color;
+        c.fill();
+        c.closePath();
+        c.stroke();
+    };
+}
 
 // Implementation
-var objects = void 0;
-function init() {
-    objects = [];
+var balls;
 
-    for (var i = 0; i < 400; i++) {
-        // objects.push()
+function init() {
+    balls = [];
+    var radius = 30;
+    for (var i = 0; i < 500; i++) {
+        var x = randomIntFromRange(0, canvas.width);
+        var y = randomIntFromRange(0, canvas.height - radius);
+        balls.push(new Ball(x, y, 2, 30, 'red'));
     }
+
+    console.log(balls);
 }
 
 // Animation Loop
 function animate() {
     requestAnimationFrame(animate);
+
     c.clearRect(0, 0, canvas.width, canvas.height);
 
-    c.fillText('HTML CANVAS BOILERPLATE', mouse.x, mouse.y);
+    for (var i = 0; i < balls.length; i++) {
+        balls[i].update();
+    }
+
+    // c.fillText('HTML CANVAS BOILERPLATE', mouse.x, mouse.y)
     // objects.forEach(object => {
     //  object.update()
     // })

@@ -1,30 +1,30 @@
 import utils from './utils'
 
-const canvas = document.querySelector('canvas')
-const c = canvas.getContext('2d')
+const canvas = document.querySelector('canvas');
+const c = canvas.getContext('2d');
 
-canvas.width = innerWidth
-canvas.height = innerHeight
+canvas.width = innerWidth;
+canvas.height = innerHeight;
 
 const mouse = {
     x: innerWidth / 2,
     y: innerHeight / 2
 };
 
-const colors = ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66']
+const colors = ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66'];
 
 const gravity = 1;
 const friction = 0.99;
 
 // Event Listeners
 addEventListener('mousemove', event => {
-    mouse.x = event.clientX
+    mouse.x = event.clientX;
     mouse.y = event.clientY
 });
 
 addEventListener('resize', () => {
-    canvas.width = innerWidth
-    canvas.height = innerHeight
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
 
     init()
 });
@@ -39,9 +39,10 @@ function randomColor(colors){
 }
 
 // Objects
-function Ball(x, y, dy, radius, color) {
+function Ball(x, y, dx, dy, radius, color) {
     this.x = x;
     this.y = y;
+    this.dx = dx;
     this.dy = dy;
     this.radius = radius;
     this.color = color;
@@ -53,6 +54,10 @@ function Ball(x, y, dy, radius, color) {
         } else{
             this.dy += gravity;
         }
+        if(this.x + this.radius + this.dx > canvas.width){
+            this.dx = -this.dx;
+        }
+        this.x += this.dx;
         this.y += this.dy;
         this.draw();
     };
@@ -71,14 +76,14 @@ function Ball(x, y, dy, radius, color) {
 
 // Implementation
 var balls;
-
+balls = [];
 function init() {
-    balls = [];
     var radius = 30;
-      for (var i = 0; i < 500; i++) {
+      for (var i = 0; i < 100; i++) {
           var x = randomIntFromRange(0, canvas.width);
           var y = randomIntFromRange(0, canvas.height - radius);
-          balls.push(new Ball(x, y, 2, 30, 'red'))
+          var dx = randomIntFromRange(-2,2);
+          balls.push(new Ball(x, y, dx, 2, 30, 'red'))
       }
 
     console.log(balls);
@@ -88,7 +93,7 @@ function init() {
 function animate() {
     requestAnimationFrame(animate);
 
-    c.clearRect(0, 0, canvas.width, canvas.height)
+    c.clearRect(0, 0, canvas.width, canvas.height);
 
       for(var i = 0; i < balls.length; i++){
         balls[i].update();
@@ -100,5 +105,5 @@ function animate() {
     // })
 }
 
-init()
-animate()
+init();
+animate();

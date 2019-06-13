@@ -26,7 +26,11 @@ addEventListener('resize', () => {
     canvas.width = innerWidth;
     canvas.height = innerHeight;
 
-    init()
+    init();
+});
+
+addEventListener("click", function(){
+    // init();
 });
 
 //Utility functions
@@ -54,7 +58,8 @@ function Ball(x, y, dx, dy, radius, color) {
         } else{
             this.dy += gravity;
         }
-        if(this.x + this.radius + this.dx > canvas.width){
+        if(this.x + this.radius + this.dx > canvas.width
+        || this.x - this.radius <= 0){
             this.dx = -this.dx;
         }
         this.x += this.dx;
@@ -75,15 +80,18 @@ function Ball(x, y, dx, dy, radius, color) {
 }
 
 // Implementation
+var ball;
 var balls;
-balls = [];
 function init() {
-    var radius = 30;
-      for (var i = 0; i < 100; i++) {
-          var x = randomIntFromRange(0, canvas.width);
+    balls= [];
+      for (var i = 0; i < 400; i++) {
+        var radius = randomIntFromRange(8, 20);
+        var x = randomIntFromRange(radius, canvas.width - radius);
           var y = randomIntFromRange(0, canvas.height - radius);
           var dx = randomIntFromRange(-2,2);
-          balls.push(new Ball(x, y, dx, 2, 30, 'red'))
+          var dy = randomIntFromRange(-2,2);
+          var color = randomColor(colors);
+          balls.push(new Ball(x, y, dx, dy, radius, color))
       }
 
     console.log(balls);
@@ -107,3 +115,4 @@ function animate() {
 
 init();
 animate();
+

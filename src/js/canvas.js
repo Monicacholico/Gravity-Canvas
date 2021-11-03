@@ -30,7 +30,7 @@ addEventListener('resize', () => {
 })
 
 addEventListener('click', function(){
-    // init();
+    init()
 })
 
 //Utility functions
